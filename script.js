@@ -150,7 +150,7 @@ contactForm.addEventListener('submit', function (e) {
   };
 
   // Send email via EmailJS
-  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+  emailjs.send('service_ykn7ibj', 'template_ohqas5a', templateParams)
     .then(function () {
       // Success feedback
       toast.textContent = 'Message sent successfully!';
