@@ -132,13 +132,45 @@ spotlightCards.forEach(card => {
 // Contact Form Toast Simulation
 const contactForm = document.getElementById('contactForm');
 const toast = document.getElementById('toast');
+const submitBtn = contactForm.querySelector('button[type="submit"]');
 
-contactForm.addEventListener('submit', (e) => {
+contactForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  toast.classList.add('show');
-  contactForm.reset();
 
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 4000);
+  // Show loading state on button
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending...';
+  submitBtn.disabled = true;
+
+  // Prepare parameters matching your EmailJS template variables
+  const templateParams = {
+    from_name: document.getElementById('name').value,
+    from_email: document.getElementById('email').value,
+    message: document.getElementById('message').value,
+  };
+
+  // Send email via EmailJS
+  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
+    .then(function () {
+      // Success feedback
+      toast.textContent = 'Message sent successfully!';
+      toast.style.background = '#10b981';
+      toast.classList.add('show');
+      contactForm.reset();
+    })
+    .catch(function (error) {
+      // Error feedback
+      toast.textContent = 'Failed to send message. Please try again.';
+      toast.style.background = '#ef4444';
+      toast.classList.add('show');
+      console.error('EmailJS Error:', error);
+    })
+    .finally(function () {
+      // Reset button state and auto-hide toast
+      submitBtn.textContent = originalBtnText;
+      submitBtn.disabled = false;
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    });
 });
